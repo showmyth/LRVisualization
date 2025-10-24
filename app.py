@@ -96,6 +96,47 @@ ax.set_zlabel('MEDV')
 
 st.pyplot(fig)
 
+# Training Model
+
+# define features = LSTAT and RM
+st.write("The selected features are LSTAT and RM due to their high correlation magnitude")
+X = pd.DataFrame(np.c_[boston_df_cleaned['LSTAT'], boston_df_cleaned['RM']], columns = ['LSTAT','RM'])
+st.dataframe(X.head())
+
+# define the target
+st.write("Our target is thus MEDV")
+y = boston_df_cleaned['MEDV']
+st.dataframe(y.head())
+
+# create training and test data
+from sklearn.model_selection import train_test_split as tts
+X_train, X_test, y_train, y_test = tts(X, y, test_size = 0.25, random_state = 5)
+
+
+st.write("The shapes of test and train data are as follows: ")
+st.write(X_train.shape)
+st.write(y_train.shape)
+
+# create the said model
+from sklearn.linear_model import LinearRegression as LR
+
+housing_model = LR()
+housing_model.fit(X_train, y_train)
+
+# model evaluation
+price_pred = housing_model.predict(X_test)
+
+# for corr coeff = R: 
+st.write('R-squared: %.4f'%housing_model.score(X_test, y_test))
+
+
+# finding MSE
+from sklearn.metrics import mean_squared_error as MSE
+
+Err = MSE(y_test, price_pred)
+st.write("The error obtained is",Err)
+
+
 
 
 
